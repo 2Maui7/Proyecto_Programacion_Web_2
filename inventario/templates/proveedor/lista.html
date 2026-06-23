@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>Proveedores</h2>
+
+{% if user.is_authenticated %}
+<a href="{% url 'crear_proveedor' %}"
+class="btn btn-success mb-3">
+Nuevo Proveedor
+</a>
+{% else %}
+<div class="alert alert-info">
+    Inicia sesión para crear, editar o eliminar proveedores.
+</div>
+{% endif %}
+
+<table class="table table-bordered">
+    <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Teléfono</th>
+        <th>Email</th>
+        {% if user.is_authenticated %}
+        <th>Acciones</th>
+        {% endif %}
+    </tr>
+
+    {% for proveedor in proveedores %}
+    <tr>
+        <td>{{ proveedor.id }}</td>
+        <td>{{ proveedor.nombre }}</td>
+        <td>{{ proveedor.telefono }}</td>
+        <td>{{ proveedor.email }}</td>
+        {% if user.is_authenticated %}
+        <td>
+            <a href="{% url 'editar_proveedor' proveedor.id %}"
+            class="btn btn-warning btn-sm">
+            Editar
+            </a>
+
+            {% if user.is_staff %}
+            <a href="{% url 'eliminar_proveedor' proveedor.id %}"
+            class="btn btn-danger btn-sm">
+            Eliminar
+            </a>
+            {% endif %}
+        </td>
+        {% endif %}
+    </tr>
+    {% empty %}
+    <tr>
+        {% if user.is_authenticated %}
+        <td colspan="5">No hay proveedores registrados.</td>
+        {% else %}
+        <td colspan="4">No hay proveedores registrados.</td>
+        {% endif %}
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}
